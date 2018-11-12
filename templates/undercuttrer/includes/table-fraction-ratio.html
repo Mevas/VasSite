@@ -1,0 +1,7 @@
+<span class="ratio-inverse">{{ ratio }}</span>
+
+{% if forloop.counter > 1 %}
+    <div style="font-size: 10px;" class="red-text">
+        {{ ratio_diff }} ({{ ratio_diff_total }})
+    </div>
+{% endif %}

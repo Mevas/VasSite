@@ -1,0 +1,30 @@
+{% extends "undercuttrer/includes/card.html" %}
+
+{% block title %}
+    Input a ratio to surpass
+{% endblock %}
+
+{% block content %}
+    <div class="center-align">
+        <div style="display: inline-block;">
+            {% include "undercuttrer/includes/fraction-form.html" %}
+        </div>
+    </div>
+    <div data-toggle="collapse" data-target="#fraction-form-collapsible" aria-expanded="false" aria-controls="fraction-form-collapsible" style="background-color: red;">
+        test
+    </div>
+
+    <script>
+        $('div[href="#fraction-form-collapsible"]').click(function (event) {
+            event.stopPropagation();
+            $('#fraction-form-collapsible').collapse('toggle')
+        });
+    </script>
+{% endblock %}
+
+{% block collapsible-id %}fraction-card-collapsible{% endblock %}
+
+{% block collapsible %}
+    <p>Explination</p>
+{% endblock %}
+

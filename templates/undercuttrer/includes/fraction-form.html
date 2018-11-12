@@ -1,0 +1,36 @@
+<form id="fraction-form" action="" method="post">
+    {% csrf_token %}
+    {% for field in form.hidden_fields %}
+        {{ field }}
+    {% endfor %}
+    <div class="form-inline">
+        <div class="input-group fraction-input fraction-input-numerator">
+            {{ form.visible_fields.0 }}
+        </div>
+        <span class="fraction-separator">/</span>
+        <div class="input-group fraction-input fraction-input-denominator">
+            {{ form.visible_fields.1 }}
+        </div>
+    </div>
+    <div id="fraction-form-collapsible" class="collapse">
+        <div class="input-group first-n">
+            {{ form.visible_fields.2 }}
+        </div>
+        <div class="input-group precision">
+            {{ form.visible_fields.3 }}
+        </div>
+        <div class="form-inline">
+            <div class="input-group max-numerator">
+                {{ form.visible_fields.4 }}
+            </div>
+            <span class="fraction-separator">/</span>
+            <div class="input-group max-denominator">
+                {{ form.visible_fields.5 }}
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="fraction-submit">
+    <button id="fraction-submit" type="submit" class="red darken-4 waves-effect waves-light btn center" form="fraction-form">Undercut</button>
+</div>

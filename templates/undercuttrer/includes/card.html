@@ -1,0 +1,18 @@
+{% load kwacros %}
+
+{% kwacro collapsible-id %}{% block collapsible-id %}{% endblock %}{% endkwacro %}
+
+<div class="card" data-toggle="collapse" data-target="#{% usekwacro collapsible-id %}" aria-expanded="false" aria-controls="{% usekwacro collapsible-id %}">
+    <div class="card-title center">
+        <div>{% block title %}{% endblock %}</div>
+    </div>
+
+    <div class="card-content">
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+<div id="{% usekwacro collapsible-id %}" class="card-collapsible">
+    {% block collapsible %}{% endblock %}
+</div>
+

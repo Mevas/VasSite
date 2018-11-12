@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SonarLintProjectSettings">
+    <option name="bindingEnabled" value="true" />
+    <option name="fileExclusions">
+      <list>
+        <option value="FILE:undercutter/templatetags/kwacros.py" />
+        <option value="FILE:undercutter/static/js/bootstrap.bundle.js" />
+        <option value="FILE:undercutter/static/js/bootstrap.js" />
+        <option value="FILE:undercutter/static/js/jquery-3.3.1.min.js" />
+        <option value="FILE:undercutter/static/js/materialize.js" />
+        <option value="FILE:undercutter/static/css/bootstrap.css" />
+        <option value="FILE:undercutter/static/css/bootstrap-grid.css" />
+        <option value="FILE:undercutter/static/css/bootstrap-reboot.css" />
+        <option value="FILE:undercutter/static/css/main.css" />
+        <option value="FILE:undercutter/static/css/main-og.css" />
+        <option value="FILE:undercutter/static/css/materialize.css" />
+        <option value="DIRECTORY:undercutter/static/css" />
+      </list>
+    </option>
+    <option name="projectKey" value="poeapp" />
+    <option name="serverId" value="Local Server" />
+  </component>
+</project>
