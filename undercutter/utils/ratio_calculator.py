@@ -14,43 +14,30 @@ class Calculation:
         self.combinations_checked = 0
         self.fractions = []
         self.n_elements = n_elements
-        self.ratio = mp.mpf(numerator) / mp.mpf(denominator)  # if ratio_to_surpass < 1 else 1 / ratio_to_surpass  # left page number
+        self.ratio = mp.mpf(numerator) / mp.mpf(denominator)
         self.max_denominator = max_denominator
         self.max_numerator = max_numerator
         self.total_elements = 0
 
     def remove_overflow(self):
-        if len(self.fractions) > self.n_elements:
-            self.fractions = self.fractions[:-1]
+        if len(self.fractions) <= self.n_elements:
+            return
 
-    def check_fraction(self, numerator, denominator):
-        fraction = Fraction(numerator / denominator)
-        if fraction < self.fraction:
-            if self.fractions:
-                if fraction > self.fractions[-1] and not any(value == fraction for value in self.fractions) or len(self.fractions) < self.n_elements:
-                    self.fractions.append(fraction)
-                    self.remove_overflow()
-            else:
-                self.fractions.append(fraction)
-        self.combinations_checked += 1
-
-        return fraction
+        self.fractions = self.fractions[:-1]
 
     def generate_fraction(self, numerator, min_denominator):
-        if min_denominator > 0:
-            for denominator in range(min_denominator, min_denominator + 4):
-                fraction = Fraction(denominator, numerator)
-                if not any(value == fraction for value in self.fractions):
-                    self.fractions.append(fraction)
-                    self.fractions.sort()
-                    self.remove_overflow()
-                    self.total_elements += 1
+        for denominator in range(min_denominator, min_denominator + 4):
+            fraction = Fraction(denominator, numerator)
+
+            # Check to see if the fraction is already in the list
+            if any(value == fraction for value in self.fractions):
                 self.combinations_checked += 1
-        else:
-            for den in range(1, self.max_denominator + 1):
-                ratio = self.check_fraction(numerator, den)
-                if self.fractions and ratio < self.fractions[-1] and len(self.fractions) == self.n_elements:
-                    break
+                break
+
+            self.fractions.append(fraction)
+            self.fractions.sort()
+            self.remove_overflow()
+            self.total_elements += 1
 
     def generate_fraction_list(self):
         if self.ratio < 1:
@@ -64,9 +51,9 @@ class Calculation:
 
     def run(self):
         start_time = timeit.default_timer()
+
         self.generate_fraction_list()
 
-        mp.dps = self.precision
         data = []
         for i, fraction in enumerate(self.fractions):
             temp = {'numerator': fraction.denominator, 'denominator': fraction.numerator, 'ratio': utils.inverse_ratio(fraction), 'inverse_ratio': utils.ratio(fraction)}
@@ -75,6 +62,10 @@ class Calculation:
                 temp['inverse_ratio_diff'] = data[i - 1]['inverse_ratio'] - temp['inverse_ratio']
                 temp['ratio_diff_total'] = data[0]['ratio'] - temp['ratio']
                 temp['inverse_ratio_diff_total'] = temp['inverse_ratio'] - data[0]['inverse_ratio']
+
+            for k, v in temp.items():
+                temp[k] = round(v, self.precision) if self.precision > 0 else int(temp[k])
+
             data.append(temp)
 
         elapsed = timeit.default_timer() - start_time

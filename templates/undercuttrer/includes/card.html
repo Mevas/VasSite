@@ -10,9 +10,16 @@
     <div class="card-content">
         {% block content %}{% endblock %}
     </div>
+
+    <div>
+        {% block expand-interior %}{% endblock %}
+    </div>
+
+    <div id="{% usekwacro collapsible-id %}" class="card-collapsible collapse">
+        <div style="padding: 2rem;">
+            {% block collapsible %}{% endblock %}
+        </div>
+    </div>
 </div>
 
-<div id="{% usekwacro collapsible-id %}" class="card-collapsible">
-    {% block collapsible %}{% endblock %}
-</div>
 

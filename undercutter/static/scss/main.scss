@@ -11,11 +11,15 @@ a {
   text-decoration: none;
 }
 
-html input[type=number] {
-  margin: 0;
-  text-align: center;
+html {
+  input[type=number] {
+    margin: 0;
+    text-align: center;
+  }
 }
-
+::-webkit-scrollbar {
+    display: none;
+}
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -46,28 +50,20 @@ table.striped > tbody > tr {
 
 .card {
   background-color: $card-color;
-  margin: 0;
+  border-radius: 5px;
+  margin: 30px 0;
 }
 
 .card-collapsible {
   background-color: $card-collapsible-color;
-  margin-bottom: 50px;
 }
 
 .keyboard-focused .collapsible-header:focus {
   background-color: $app-background-lighter;
 }
 
-.collapsible {
-  border: 0;
-
-  * {
-    border: 0;
-  }
-}
-
 .fraction-submit {
-  padding: 20px 0;
+  padding-top: 20px;
   text-align: center;
 }
 
@@ -101,4 +97,20 @@ tbody > tr:not(:first-child) .ordinal-number {
 
 .extra-data {
   color: $extra-data-color;
+}
+
+.result-table {
+  table-layout: fixed;
+
+  th {
+    width: 100%;
+  }
+}
+
+.expand-fraction-form {
+  padding-bottom: 10px;
+
+  i {
+    cursor: default;
+  }
 }

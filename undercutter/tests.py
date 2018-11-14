@@ -25,7 +25,6 @@ class CalculationTestCase(TestCase):
         self.assert_nth_element(inverse_data, 9, 11, 38)
         self.assertTrue(inverse_data['fractions'][0]['ratio'] < 1)
 
-    # TODO: Fix table width
     def test_other(self):
         data2 = Calculation(100, 13, 24, 16, self.limit, self.limit).run()
         self.assert_empty(data2)

@@ -10,14 +10,38 @@
             {% include "undercuttrer/includes/fraction-form.html" %}
         </div>
     </div>
-    <div data-toggle="collapse" data-target="#fraction-form-collapsible" aria-expanded="false" aria-controls="fraction-form-collapsible" style="background-color: red;">
-        test
+{% endblock %}
+
+{% block expand-interior %}
+    <div class="expand-fraction-form center" data-toggle="collapse" data-target="#fraction-form-collapsible" aria-expanded="false" aria-controls="fraction-form-collapsible">
+        <i id="expand-fraction-form-icon" class="fas fa-chevron-down small"></i>
     </div>
 
     <script>
-        $('div[href="#fraction-form-collapsible"]').click(function (event) {
+        let formExpandToggle = false;
+        $('div[data-target="#fraction-form-collapsible"]').click(function (event) {
             event.stopPropagation();
-            $('#fraction-form-collapsible').collapse('toggle')
+            $('#fraction-form-collapsible').collapse('toggle');
+            formExpandToggle = !formExpandToggle;
+
+            let options = {};
+            if (formExpandToggle) {
+                options = {
+                    from: 'fa-chevron-down',
+                    to: 'fa-chevron-up',
+                    animation: 'verticalFlip',
+                    duration: 250
+                };
+            } else {
+                options = {
+                    from: 'fa-chevron-up',
+                    to: 'fa-chevron-down',
+                    animation: 'verticalFlip',
+                    duration: 250
+                };
+            }
+
+            iconate(document.getElementById('expand-fraction-form-icon'), options);
         });
     </script>
 {% endblock %}

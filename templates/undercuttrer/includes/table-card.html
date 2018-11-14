@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-    <table class="centered highlight striped">
+    <table class="result-table centered highlight striped">
         <thead>
         <tr>
             <th>Left ratio</th>
@@ -47,9 +47,6 @@
 {% block collapsible-id %}table-card-collapsible{% endblock %}
 
 {% block collapsible %}
-    <div style="padding: 2rem;">
-        <p>Checked <span class="extra-data">{{ data.iterations | intcomma }}</span> combinations and it took <span class="extra-data">{{ data.time }}</span> to process your request
-        </p>
-    </div>
+    Checked <span class="extra-data">{{ data.iterations | intcomma }}</span> combinations and it took <span class="extra-data">{{ data.time }}</span> to process your request
 {% endblock %}
 

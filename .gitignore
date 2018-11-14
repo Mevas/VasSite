@@ -219,6 +219,7 @@ fabric.properties
 # Installer logs
 
 # Unit test / coverage reports
+test_results/
 
 # Translations
 
