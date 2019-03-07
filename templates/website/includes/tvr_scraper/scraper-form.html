@@ -1,0 +1,16 @@
+<form id="scraper-form" action="" method="post">
+    {% csrf_token %}
+    {% for field in form.hidden_fields %}
+        {{ field }}
+    {% endfor %}
+    <div class="input-group scraper-input">
+        {{ form.visible_fields.0 }}
+    </div>
+    <div class="input-group scraper-input">
+        {{ form.visible_fields.1 }}
+    </div>
+</form>
+
+<div class="scraper-submit">
+    <button id="scraper-submit" type="submit" class="blue darken-4 waves-effect waves-light btn center" form="scraper-form">Create raport</button>
+</div>

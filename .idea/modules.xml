@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/PoE_Undercutter.iml" filepath="$PROJECT_DIR$/.idea/PoE_Undercutter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../VasSite/.idea/VasSite.iml" filepath="$PROJECT_DIR$/../VasSite/.idea/VasSite.iml" />
     </modules>
   </component>
 </project>

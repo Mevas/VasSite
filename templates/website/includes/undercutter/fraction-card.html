@@ -1,0 +1,60 @@
+{% extends "website/includes/card.html" %}
+
+{% block title %}
+    Input a ratio to surpass
+{% endblock %}
+
+{% block content %}
+    <div class="center-align">
+        <div style="display: inline-block;">
+            {% include "website/includes/undercutter/fraction-form.html" %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block expand-interior %}
+    <div class="expand-fraction-form center" data-toggle="collapse" data-target="#fraction-form-collapsible" aria-expanded="false" aria-controls="fraction-form-collapsible">
+        <i id="expand-fraction-form-icon" class="fas fa-chevron-down small"></i>
+    </div>
+
+    <script>
+        let formExpandToggle = false;
+        $('div[data-target="#fraction-form-collapsible"]').click(function (event) {
+            event.stopPropagation();
+            $('#fraction-form-collapsible').collapse('toggle');
+            formExpandToggle = !formExpandToggle;
+
+            let options = {};
+            if (formExpandToggle) {
+                options = {
+                    from: 'fa-chevron-down',
+                    to: 'fa-chevron-up',
+                    animation: 'verticalFlip',
+                    duration: 250
+                };
+            } else {
+                options = {
+                    from: 'fa-chevron-up',
+                    to: 'fa-chevron-down',
+                    animation: 'verticalFlip',
+                    duration: 250
+                };
+            }
+
+            iconate(document.getElementById('expand-fraction-form-icon'), options);
+        });
+    </script>
+{% endblock %}
+
+{% block collapsible-id %}fraction-card-collapsible{% endblock %}
+
+{% block collapsible %}
+    <p>This is a undercutting calculator. Useful for any game where you need to beat someone else's ratio on any item on the market.</p><br>
+    <ul>
+        <li>Ratio to surpass</li>
+        <li>Maximum numerator and denominator</li>
+        <li>Number of elements to show (lower = faster)</li>
+        <li>Number of decimal places to show</li>
+    </ul>
+{% endblock %}
+

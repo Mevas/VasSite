@@ -1,0 +1,13 @@
+<nav>
+    <div class="nav-wrapper">
+        <a href="{% url 'index' %}" class="brand-logo">VasSite</a>
+        <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            {% include "website/includes/menu-list.html" %}
+        </ul>
+    </div>
+
+    <ul class="sidenav" id="mobile-nav">
+        {% include "website/includes/menu-list.html" %}
+    </ul>
+</nav>

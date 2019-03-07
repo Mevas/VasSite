@@ -1,0 +1,8 @@
+{% extends "website/base.html" %}
+
+{% block content %}
+    {% include "website/includes/undercutter/fraction-card.html" %}
+    {% if data %}
+        {% include "website/includes/table-card.html" %}
+    {% endif %}
+{% endblock %}
