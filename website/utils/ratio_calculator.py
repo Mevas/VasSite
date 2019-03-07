@@ -1,12 +1,8 @@
 import timeit
 from fractions import Fraction
 from mpmath import mp
-from sympy import Rational
 
 from website.utils import utils
-from sympy.ntheory import continued_fraction
-
-from website.utils.stern_brocot import SBNode
 
 
 class Calculation:
@@ -44,34 +40,10 @@ class Calculation:
             self.remove_overflow()
             self.total_elements += 1
 
-    def generate_fraction_list_old(self):
-        if self.ratio < 1:
-            self.fraction = Fraction(self.fraction.denominator, self.fraction.numerator)
-            self.ratio = mp.mpf(1) / self.ratio
-
-        max_numerator = min(self.max_numerator, int(self.max_denominator * self.numerator / self.denominator))
-        for numerator in range(1, max_numerator + 1):
-            min_denominator = int(numerator * self.denominator / self.numerator) + (1 if self.ratio > 1 else 0)
-            self.generate_fraction(numerator, min_denominator)
-
-    def generate_fraction_list(self):
-        if self.numerator < self.denominator:
-            child_tree_data = SBNode(self.numerator, self.denominator).left_child().get_fractions(self.max_numerator, self.max_denominator, self.n_elements)
-            neighbour_fraction_tree_data = SBNode(self.numerator, self.denominator).get_parent().left_child().get_fractions(self.max_numerator, self.max_denominator, self.n_elements, child_tree_data)
-        else:
-            child_tree_data = SBNode(self.numerator, self.denominator).right_child().get_fractions(self.max_numerator, self.max_denominator, self.n_elements)
-            neighbour_fraction_tree_data = SBNode(self.numerator, self.denominator).get_parent().right_child().get_fractions(self.max_numerator, self.max_denominator, self.n_elements, child_tree_data)
-        parent = [SBNode(self.numerator, self.denominator).get_parent().fraction]
-
-        if parent[0].p > self.max_numerator or parent[0].q > self.max_denominator or child_tree_data.fractions_generated >= 10:
-            parent = []
-
-        self.fractions = [Fraction(el.p, el.q) for el in child_tree_data.fractions + parent + neighbour_fraction_tree_data.fractions]
-
     def run(self):
         start_time = timeit.default_timer()
 
-        self.generate_fraction_list_new()
+        self.generate_fraction_list()
 
         data = []
         for i, fraction in enumerate(self.fractions):
@@ -91,7 +63,7 @@ class Calculation:
 
         return {'fractions': data, 'iterations': self.combinations_checked, 'time': utils.humanize_seconds(elapsed), 'n_elements': self.n_elements}
 
-    def generate_fraction_list_new(self):
+    def generate_fraction_list(self):
         for den in range(1, self.max_denominator + 1):
             for num in range(1, self.max_numerator + 1):
                 self.combinations_checked += 1
@@ -106,3 +78,5 @@ class Calculation:
                 self.fractions.sort(reverse=True)
                 self.remove_overflow()
                 self.total_elements += 1
+        self.fractions.insert(0, self.fraction)
+        self.total_elements += 1

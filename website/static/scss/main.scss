@@ -109,11 +109,15 @@ tbody > tr:not(:first-child) .ordinal-number {
   color: $extra-data-color;
 }
 
-.result-table {
+.result-table.striped {
   table-layout: fixed;
 
   th {
     width: 100%;
+  }
+
+  tbody > tr:first-child {
+    background-color: $original-fraction;
   }
 }
 

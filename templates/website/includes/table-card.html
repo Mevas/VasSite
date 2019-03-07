@@ -3,7 +3,7 @@
 {% load humanize %}
 
 {% block title %}
-    Sell <span class="sell-currency yellow-text">{{ data.fractions.0.numerator }}</span> for <span class="sell-currency yellow-text">{{ data.fractions.0.denominator }}</span>
+    Sell <span class="sell-currency yellow-text">{{ data.fractions.1.numerator }}</span> for <span class="sell-currency yellow-text">{{ data.fractions.1.denominator }}</span>
 {% endblock %}
 
 {% block content %}
@@ -22,7 +22,7 @@
                 <td>
                     <div class="rel">
                         <span class="ordinal-number">
-                            {{ forloop.counter | ordinal }}
+                            {{ forloop.counter0 | ordinal }}
                         </span>
 
                         {% include "website/includes/table-fraction-ratio.html" with ratio=fraction.ratio ratio_diff=fraction.ratio_diff ratio_diff_total=fraction.ratio_diff_total %}

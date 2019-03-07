@@ -117,10 +117,12 @@ tbody > tr:not(:first-child) .ordinal-number {
 .extra-data {
   color: #a4adff; }
 
-.result-table {
+.result-table.striped {
   table-layout: fixed; }
-  .result-table th {
+  .result-table.striped th {
     width: 100%; }
+  .result-table.striped tbody > tr:first-child {
+    background-color: #2a2a3c; }
 
 .expand-fraction-form {
   padding-bottom: 10px; }
