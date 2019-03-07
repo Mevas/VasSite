@@ -1,13 +1,13 @@
 {% extends "website/includes/card.html" %}
 
 {% block title %}
-    Input a ratio to surpass
+    Input the currencies to undercut
 {% endblock %}
 
 {% block content %}
     <div class="center-align">
         <div style="display: inline-block;">
-            {% include "website/includes/undercutter/fraction-form.html" %}
+            {% include "website/includes/auto_undercutter/auto-fraction-form.html" %}
         </div>
     </div>
 {% endblock %}
@@ -50,6 +50,5 @@
 
 {% block collapsible %}
     <p>This is an undercutting calculator. Useful for any game where you need to beat someone else's ratio on any item on the market.</p><br>
-    <p class="text-success">Lower number of results = faster calculation</p>
 {% endblock %}
 

@@ -25,7 +25,7 @@
                             {{ forloop.counter0 | ordinal }}
                         </span>
 
-                        {% include "website/includes/table-fraction-ratio.html" with ratio=fraction.ratio ratio_diff=fraction.ratio_diff ratio_diff_total=fraction.ratio_diff_total %}
+                        {% include "website/includes/table-fraction-ratio.html" with ratio=fraction.inverse_ratio ratio_diff=fraction.inverse_ratio_diff ratio_diff_total=fraction.inverse_ratio_diff_total %}
                     </div>
                 </td>
                 <td>
@@ -34,7 +34,7 @@
                     <span class="fraction-denominator">{{ fraction.denominator }}</span>
                 </td>
                 <td>
-                    {% include "website/includes/table-fraction-ratio.html" with ratio=fraction.inverse_ratio ratio_diff=fraction.inverse_ratio_diff ratio_diff_total=fraction.inverse_ratio_diff_total %}
+                    {% include "website/includes/table-fraction-ratio.html" with ratio=fraction.ratio ratio_diff=fraction.ratio_diff ratio_diff_total=fraction.ratio_diff_total %}
                 </td>
             </tr>
         {% endfor %}

@@ -1,4 +1,6 @@
 from mpmath import mp
+import json
+import requests
 
 
 def is_empty(data):
@@ -19,7 +21,7 @@ def create_time_string(hours, minutes, seconds, milliseconds, microseconds):
 
 def add_time_substring(string, unit, unit_name):
     if unit:
-        string += f'{ unit } ' + (f'{unit_name}s, ' if unit > 1 else f'{unit_name}, ')
+        string += f'{unit} ' + (f'{unit_name}s, ' if unit > 1 else f'{unit_name}, ')
 
     return string
 
@@ -51,3 +53,22 @@ def ratio(fraction):
 
 def inverse_ratio(fraction):
     return mp.mpf(1) / ratio(fraction)
+
+
+def get_currency_names():
+    import os
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    with open(f'{dir_path}/data/currencies.json') as json_file:
+        currencies = json.load(json_file)
+        return [currency['name'] for currency in currencies]
+
+
+def get_league_names():
+    url = 'http://api.pathofexile.com/leagues'
+    decoded_json = requests.get(url).json()
+    names = [league['id'] for league in decoded_json]
+    return names
+
+
+def get_trade_league_names():
+    return [name for name in get_league_names() if 'SSF' not in name]

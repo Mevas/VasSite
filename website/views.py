@@ -2,8 +2,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from website.utils.ratio_calculator import Calculation
 from website.utils.tvr_program_scraper import Raport
+from website.utils.ratio_scraper import get_ratio
 
-from .forms import FractionForm, ScraperForm
+from .forms import FractionForm, AutoFractionForm, ScraperForm
 
 
 def index(request):
@@ -21,6 +22,19 @@ def undercutter(request):
         form = FractionForm(initial={'first_n': 10, 'precision': 4, 'max_numerator': 100, 'max_denominator': 100})
 
     return render(request, 'website/undercutter.html', {'form': form})
+
+
+def auto_undercutter(request):
+    if request.method == 'POST':
+        form = AutoFractionForm(request.POST)
+        if form.is_valid():
+            form_data = form.clean()
+            data = get_ratio(form_data['league'], form_data['currency_buy'], form_data['currency_sell'])
+            # data = get_ratio(form_data['currency_buy'], form_data['currency_sell'], form_data['max_numerator'], form_data['max_denominator'], form_data['league']).run()
+            return render(request, 'website/auto_undercutter.html', {'form': form, 'data': data})
+    else:
+        form = AutoFractionForm(initial={'max_numerator': 100, 'max_denominator': 100})
+    return render(request, 'website/auto_undercutter.html', {'form': form})
 
 
 def program_scraper(request):

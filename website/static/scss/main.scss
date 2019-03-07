@@ -128,3 +128,13 @@ tbody > tr:not(:first-child) .ordinal-number {
     cursor: default;
   }
 }
+
+.dropdown-content li>span {
+  background-color: $app-background-darker;
+  color: $app-text-color;
+  text-align: center;
+
+  &:hover {
+    background-color: $app-background;
+  }
+}

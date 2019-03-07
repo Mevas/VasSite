@@ -129,4 +129,11 @@ tbody > tr:not(:first-child) .ordinal-number {
   .expand-fraction-form i {
     cursor: default; }
 
+.dropdown-content li > span {
+  background-color: #161616;
+  color: #e0e0e0;
+  text-align: center; }
+  .dropdown-content li > span:hover {
+    background-color: #202020; }
+
 /*# sourceMappingURL=main.css.map */

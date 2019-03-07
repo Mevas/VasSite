@@ -1,8 +1,13 @@
+Django
+
+mpmath==1.0.0
+
+requests
+lxml
+html5lib
+BeautifulSoup4
+
 openpyxl
 pandas
-sympy
 xlrd
 xlsxwriter
-mpmath==1.0.0
-Django
-lxml
