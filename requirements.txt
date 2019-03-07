@@ -1,3 +1,4 @@
+selenium
 Django
 
 mpmath==1.0.0
