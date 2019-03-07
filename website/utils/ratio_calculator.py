@@ -92,7 +92,7 @@ class Calculation:
         return {'fractions': data, 'iterations': self.combinations_checked, 'time': utils.humanize_seconds(elapsed), 'n_elements': self.n_elements}
 
     def generate_fraction_list_new(self):
-        for den in range(1, self.max_numerator + 1):
+        for den in range(1, self.max_denominator + 1):
             for num in range(1, self.max_numerator + 1):
                 self.combinations_checked += 1
                 if num * self.denominator >= self.numerator * den:

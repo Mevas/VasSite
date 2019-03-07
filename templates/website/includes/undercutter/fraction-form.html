@@ -1,9 +1,11 @@
 <form id="fraction-form" action="" method="post">
     {% csrf_token %}
+
     {% for field in form.hidden_fields %}
         {{ field }}
     {% endfor %}
-    <div class="form-inline">
+
+    <div class="form-inline tooltipped" data-position="left" data-tooltip="Target fraction">
         <div class="input-group fraction-input fraction-input-numerator">
             {{ form.visible_fields.0 }}
         </div>
@@ -12,8 +14,9 @@
             {{ form.visible_fields.1 }}
         </div>
     </div>
+
     <div id="fraction-form-collapsible" class="collapse">
-        <div class="form-inline">
+        <div class="form-inline tooltipped" data-position="left" data-tooltip="Maximum fraction">
             <div class="input-group max-numerator">
                 {{ form.visible_fields.4 }}
             </div>
@@ -22,10 +25,10 @@
                 {{ form.visible_fields.5 }}
             </div>
         </div>
-        <div class="input-group first-n">
+        <div class="input-group first-n tooltipped" data-position="left" data-tooltip="Number of results">
             {{ form.visible_fields.2 }}
         </div>
-        <div class="input-group precision">
+        <div class="input-group precision tooltipped" data-position="left" data-tooltip="Number of decimal places">
             {{ form.visible_fields.3 }}
         </div>
     </div>

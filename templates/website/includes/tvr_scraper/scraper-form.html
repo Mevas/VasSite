@@ -3,10 +3,10 @@
     {% for field in form.hidden_fields %}
         {{ field }}
     {% endfor %}
-    <div class="input-group scraper-input">
+    <div class="input-group scraper-input tooltipped" data-position="left" data-tooltip="Name">
         {{ form.visible_fields.0 }}
     </div>
-    <div class="input-group scraper-input">
+    <div class="input-group scraper-input tooltipped" data-position="left" data-tooltip="Type">
         {{ form.visible_fields.1 }}
     </div>
 </form>
