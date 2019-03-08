@@ -65,9 +65,12 @@ def get_currency_names():
 
 def get_league_names():
     url = 'http://api.pathofexile.com/leagues'
-    decoded_json = requests.get(url).json()
-    names = [league['id'] for league in decoded_json]
-    return names
+    try:
+        decoded_json = requests.get(url).json()
+        names = [league['id'] for league in decoded_json]
+        return names
+    except json.decoder.JSONDecodeError:
+        return ['Standard', 'Hardcore', 'SSF Standard', 'SSF Hardcore']
 
 
 def get_trade_league_names():

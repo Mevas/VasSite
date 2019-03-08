@@ -31,18 +31,21 @@ def auto_undercutter(request):
         form = AutoFractionForm(request.POST)
         if form.is_valid():
             form_data = form.clean()
+
             market_data = get_ratio(form_data['league'], form_data['currency_sell'], form_data['currency_buy'])
-            undercutting_data = Calculation(market_data[0].numerator, market_data[0].denominator, 1, 4, form_data['max_numerator'], form_data['max_denominator']).run()
-            manager = Manager('Standard')
+            undercutting_data = Calculation(market_data[0].numerator, market_data[0].denominator, 1, 4, form_data['max_denominator'], form_data['max_numerator']).run()
+            manager = Manager()
             try:
                 manager.update_offer(form_data['currency_sell'], undercutting_data['fractions'][1]['numerator'], form_data['currency_buy'], undercutting_data['fractions'][1]['denominator'])
                 manager.save()
             except IndexError:
                 success = False
-            return render(request, 'website/auto_undercutter.html', {'form': form})
+            # TODO: Fix fractions < or > 1
+            print(success)
+            return render(request, 'website/auto_undercutter.html', {'form': form, 'data': {'success': success}})
     else:
         form = AutoFractionForm(initial={'max_numerator': 100, 'max_denominator': 100})
-    return render(request, 'website/auto_undercutter.html', {'form': form, 'data': success})
+    return render(request, 'website/auto_undercutter.html', {'form': form})
 
 
 def program_scraper(request):

@@ -23,16 +23,16 @@ class FractionForm(forms.Form):
 class AutoFractionForm(forms.Form):
     choices = [(currency, currency) for currency in utils.get_currency_names()]
     leagues = [(league, league) for league in utils.get_trade_league_names()]
-    currency_buy = forms.ChoiceField(choices=choices)
     currency_sell = forms.ChoiceField(choices=choices)
+    currency_buy = forms.ChoiceField(choices=choices)
     max_numerator = forms.IntegerField(min_value=1)
     max_denominator = forms.IntegerField(min_value=1)
     league = forms.ChoiceField(choices=leagues)
 
     def clean(self):
         cleaned_data = super(AutoFractionForm, self).clean()
-        currency_buy = cleaned_data.get('currency_buy')
         currency_sell = cleaned_data.get('currency_sell')
+        currency_buy = cleaned_data.get('currency_buy')
         max_numerator = cleaned_data.get('max_numerator')
         max_denominator = cleaned_data.get('max_denominator')
         league = cleaned_data.get('league')

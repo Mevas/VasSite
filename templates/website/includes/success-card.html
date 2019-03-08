@@ -1,0 +1,9 @@
+{% extends "website/includes/card.html" %}
+
+{% block title %}
+    {% if data.success %}
+        <span class="text-success">Updated successfully</span>
+    {% else %}
+        <span class="text-warning">There is no better fraction within the given limits</span>
+    {% endif %}
+{% endblock %}

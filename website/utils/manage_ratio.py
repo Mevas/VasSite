@@ -1,6 +1,8 @@
 import selenium
 from selenium import webdriver
 
+from website.utils import utils
+
 
 class Offer:
     def __init__(self, driver, index):
@@ -56,7 +58,7 @@ class Offer:
 
 
 class Manager:
-    def __init__(self, league):
+    def __init__(self, league=''):
         # Chrome options for optimal performance in docker
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--no-sandbox')
@@ -69,7 +71,10 @@ class Manager:
         self.driver.get('http://currency.poe.trade')
         self.driver.add_cookie({'name': 'apikey', 'value': 'ugahadomaunaba'})
 
-        self.league = league
+        # Set the default league to the softcore temporary league if one is not specifed
+        self.leagues = utils.get_trade_league_names()
+        self.league = league if league else self.leagues[2] if len(self.leagues) > 2 else 'Standard'
+
         self.offer_count = 0
         self.offers = []
 
