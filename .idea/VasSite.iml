@@ -21,7 +21,7 @@
       <excludeFolder url="file://$MODULE_DIR$/website/static/js" />
       <excludeFolder url="file://$MODULE_DIR$/website/templatetags" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.7" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Remote Python 3.7.2 Docker (vassite:latest)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Iconate" level="project" />
     <orderEntry type="library" name="Nicescroll" level="project" />

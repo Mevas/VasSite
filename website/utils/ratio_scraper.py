@@ -14,6 +14,7 @@ def select_json_element(elements, element_to_find):
 
 
 def get_ratio(league, from_currency, to_currency):
+    # Local directory needed for some reason
     import os
     dir_path = os.path.dirname(os.path.realpath(__file__))
     with open(f'{dir_path}/data/currencies.json') as json_file:
@@ -22,8 +23,13 @@ def get_ratio(league, from_currency, to_currency):
     url = f'http://currency.poe.trade/search?league={league}&online=x&stock=&want={select_json_element(currencies, from_currency)}&have={select_json_element(currencies, to_currency)}'
     soup = BeautifulSoup(requests.get(url).content, 'lxml')
     ratios = []
+
+    print(url)
+
+    # Gets the ratios from the middle of the row
+    # TODO: Get stock information
     for ele in soup.find_all('div', {'class': 'displayoffer-middle'}):
         ratios.append([float(s) for s in re.findall(r'-?\d+\.?\d*', ele.text)])
     ratios = sorted({Fraction(ratio[0]) / Fraction(ratio[1]) for ratio in ratios}, reverse=True)
-    print(url)
-    print(ratios)
+
+    return ratios

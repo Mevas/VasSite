@@ -64,19 +64,35 @@ class Calculation:
         return {'fractions': data, 'iterations': self.combinations_checked, 'time': utils.humanize_seconds(elapsed), 'n_elements': self.n_elements}
 
     def generate_fraction_list(self):
-        for den in range(1, self.max_denominator + 1):
-            for num in range(1, self.max_numerator + 1):
-                self.combinations_checked += 1
-                if num * self.denominator >= self.numerator * den:
-                    break
+        if self.numerator / self.denominator <= 1:
+            for den in range(1, self.max_denominator + 1):
+                for num in range(1, self.max_numerator + 1):
+                    self.combinations_checked += 1
+                    if num * self.denominator >= self.numerator * den:
+                        break
 
-                fraction = Fraction(num, den)
-                if fraction.numerator != num or fraction.denominator != den:
-                    continue
+                    fraction = Fraction(num, den)
+                    if fraction.numerator != num or fraction.denominator != den:
+                        continue
 
-                self.fractions.append(fraction)
-                self.fractions.sort(reverse=True)
-                self.remove_overflow()
-                self.total_elements += 1
+                    self.fractions.append(fraction)
+                    self.fractions.sort(reverse=True)
+                    self.remove_overflow()
+                    self.total_elements += 1
+        else:
+            for den in range(self.max_denominator + 1, 1, -1):
+                for num in range(self.max_numerator + 1, 1, -1):
+                    self.combinations_checked += 1
+                    if num * self.denominator <= self.numerator * den:
+                        break
+
+                    fraction = Fraction(num, den)
+                    if fraction.numerator != num or fraction.denominator != den:
+                        continue
+
+                    self.fractions.append(fraction)
+                    self.fractions.sort(reverse=False)
+                    self.remove_overflow()
+                    self.total_elements += 1
         self.fractions.insert(0, self.fraction)
         self.total_elements += 1

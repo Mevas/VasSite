@@ -1,4 +1,4 @@
-FROM python:latest
+FROM joyzoursky/python-chromedriver:3.7-selenium
 
 # File Author / Maintainer
 MAINTAINER Mevas
