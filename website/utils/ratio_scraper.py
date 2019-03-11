@@ -15,10 +15,7 @@ def get_ratio(league, from_currency, to_currency):
     # Gets the ratios from the middle of the row
 
     for ele in soup.find_all('div', {'class': 'displayoffer'}):
-        offer = {'fraction': Fraction(ele['data-sellvalue']) / Fraction(ele['data-buyvalue']), 'stock': ele.get('data-stock', None), 'account_name': ele['data-username']}
-        print(offer)
+        offer = {'fraction': Fraction(ele['data-sellvalue']) / Fraction(ele['data-buyvalue']), 'stock': int(ele.get('data-stock', -1)), 'account_name': ele['data-username']}
         ratios.append(offer)
-
-    # ratios = sorted({Fraction(ratio[0]) / Fraction(ratio[1]) for ratio in ratios}, reverse=True)
 
     return ratios

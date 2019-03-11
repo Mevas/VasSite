@@ -28,6 +28,9 @@ def undercutter(request):
 
 def auto_undercutter(request):
     success = True
+    account_name = request.COOKIES.get('account_name', '')
+    api_key = request.COOKIES.get('api_key', '')
+
     if request.method == 'POST':
         form = AutoFractionForm(request.POST)
         if form.is_valid():
@@ -35,12 +38,18 @@ def auto_undercutter(request):
 
             market_data = get_ratio(form_data['league'], form_data['currency_sell'], form_data['currency_buy'])
 
+            # Initialize cookies if they are not set
+            account_name = form_data.get('account_name', account_name)
+            api_key = form_data.get('api_key', api_key)
+
+            # Get the next offer if the best one is the user's one or it has less stock
             offer = 0
-            if market_data[offer]['account_name'] == form_data.get('account_name', 'lolonar1'):
+            while market_data[offer]['account_name'] == account_name or 0 <= market_data[offer]['stock'] < form_data['max_numerator']:
                 offer += 1
 
             undercutting_data = Calculation(market_data[offer]['fraction'].numerator, market_data[offer]['fraction'].denominator, 1, 4, form_data['max_numerator'], form_data['max_denominator']).run()
-            manager = Manager(form_data['league'])
+
+            manager = Manager(api_key, form_data['league'])
             currencies = utils.get_currency_list()
             url = f'http://currency.poe.trade/search?league={form_data["league"]}&online=x&stock=&want={utils.select_json_element(currencies, form_data["currency_sell"])}&have={utils.select_json_element(currencies, form_data["currency_buy"])}'
             try:
@@ -49,10 +58,16 @@ def auto_undercutter(request):
                 manager.save()
             except IndexError:
                 success = False
-            print(url)
-            return render(request, 'website/auto_undercutter.html', {'form': form, 'data': {'success': success, 'url': url}})
+
+            response = render(request, 'website/auto_undercutter.html', {'form': form, 'data': {'success': success, 'url': url}})
+
+            # Set cookies for later uses
+            response.set_cookie('account_name', form_data.get('account_name', ''))
+            response.set_cookie('api_key', form_data.get('api_key', ''))
+
+            return response
     else:
-        form = AutoFractionForm(initial={'max_numerator': 100, 'max_denominator': 100})
+        form = AutoFractionForm(initial={'account_name': account_name, 'max_numerator': 100, 'max_denominator': 100})
     return render(request, 'website/auto_undercutter.html', {'form': form})
 
 

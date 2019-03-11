@@ -32,6 +32,7 @@ class AutoFractionForm(forms.Form):
     max_denominator = forms.IntegerField(min_value=1)
     league = forms.ChoiceField(choices=leagues)
     account_name = forms.CharField()
+    api_key = forms.CharField()
 
     def clean(self):
         cleaned_data = super(AutoFractionForm, self).clean()
@@ -41,8 +42,9 @@ class AutoFractionForm(forms.Form):
         max_denominator = cleaned_data.get('max_denominator')
         league = cleaned_data.get('league')
         account_name = cleaned_data.get('account_name')
+        api_key = cleaned_data.get('api_key')
 
-        if not max_numerator and not max_denominator or not league or not currency_buy or not currency_sell or not account_name:
+        if not max_numerator and not max_denominator or not league or not currency_buy or not currency_sell or not account_name or not api_key:
             raise forms.ValidationError('You have to write something!')
 
         return cleaned_data

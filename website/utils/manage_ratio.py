@@ -58,18 +58,18 @@ class Offer:
 
 
 class Manager:
-    def __init__(self, league=''):
+    def __init__(self, api_key, league=''):
         # Chrome options for optimal performance in docker
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--window-size=1420,1080')
+        chrome_options.add_argument('--window-size=1420,2060')
         chrome_options.add_argument('--disable-gpu')
         self.driver = webdriver.Chrome(options=chrome_options)
         self.driver.implicitly_wait(10)
 
         self.driver.get('http://currency.poe.trade')
-        self.driver.add_cookie({'name': 'apikey', 'value': 'ugahadomaunaba'})
+        self.driver.add_cookie({'name': 'apikey', 'value': api_key})
 
         # Set the default league to the softcore temporary league if one is not specifed
         self.leagues = utils.get_trade_league_names()
