@@ -1,3 +1,5 @@
+from collections import deque
+
 from django import forms
 from website.utils import utils
 
@@ -22,12 +24,14 @@ class FractionForm(forms.Form):
 
 class AutoFractionForm(forms.Form):
     choices = [(currency, currency) for currency in utils.get_currency_names()]
-    leagues = [(league, league) for league in utils.get_trade_league_names()]
+    leagues = deque([(league, league) for league in utils.get_trade_league_names()])
+    leagues.rotate(2)
     currency_sell = forms.ChoiceField(choices=choices)
     currency_buy = forms.ChoiceField(choices=choices)
     max_numerator = forms.IntegerField(min_value=1)
     max_denominator = forms.IntegerField(min_value=1)
     league = forms.ChoiceField(choices=leagues)
+    account_name = forms.CharField()
 
     def clean(self):
         cleaned_data = super(AutoFractionForm, self).clean()
@@ -36,8 +40,9 @@ class AutoFractionForm(forms.Form):
         max_numerator = cleaned_data.get('max_numerator')
         max_denominator = cleaned_data.get('max_denominator')
         league = cleaned_data.get('league')
+        account_name = cleaned_data.get('account_name')
 
-        if not max_numerator and not max_denominator or not league or not currency_buy or not currency_sell:
+        if not max_numerator and not max_denominator or not league or not currency_buy or not currency_sell or not account_name:
             raise forms.ValidationError('You have to write something!')
 
         return cleaned_data

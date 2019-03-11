@@ -4,6 +4,7 @@ from website.utils.ratio_calculator import Calculation
 from website.utils.tvr_program_scraper import Raport
 from website.utils.ratio_scraper import get_ratio
 from website.utils.manage_ratio import Manager
+from website.utils import utils
 
 from .forms import FractionForm, AutoFractionForm, ScraperForm
 
@@ -33,16 +34,23 @@ def auto_undercutter(request):
             form_data = form.clean()
 
             market_data = get_ratio(form_data['league'], form_data['currency_sell'], form_data['currency_buy'])
-            undercutting_data = Calculation(market_data[0].numerator, market_data[0].denominator, 1, 4, form_data['max_denominator'], form_data['max_numerator']).run()
+
+            offer = 0
+            if market_data[offer]['account_name'] == form_data.get('account_name', 'lolonar1'):
+                offer += 1
+
+            undercutting_data = Calculation(market_data[offer]['fraction'].numerator, market_data[offer]['fraction'].denominator, 1, 4, form_data['max_numerator'], form_data['max_denominator']).run()
             manager = Manager(form_data['league'])
+            currencies = utils.get_currency_list()
+            url = f'http://currency.poe.trade/search?league={form_data["league"]}&online=x&stock=&want={utils.select_json_element(currencies, form_data["currency_sell"])}&have={utils.select_json_element(currencies, form_data["currency_buy"])}'
             try:
                 print(f'Posted {undercutting_data["fractions"][1]["numerator"]} {form_data["currency_sell"]} for {undercutting_data["fractions"][1]["denominator"]} {form_data["currency_buy"]}')
                 manager.update_offer(form_data['currency_sell'], undercutting_data['fractions'][1]['numerator'], form_data['currency_buy'], undercutting_data['fractions'][1]['denominator'])
                 manager.save()
             except IndexError:
                 success = False
-
-            return render(request, 'website/auto_undercutter.html', {'form': form, 'data': {'success': success}})
+            print(url)
+            return render(request, 'website/auto_undercutter.html', {'form': form, 'data': {'success': success, 'url': url}})
     else:
         form = AutoFractionForm(initial={'max_numerator': 100, 'max_denominator': 100})
     return render(request, 'website/auto_undercutter.html', {'form': form})

@@ -1,35 +1,24 @@
-import re
 from fractions import Fraction
 
-from bs4 import BeautifulSoup
 import requests
-import json
+from bs4 import BeautifulSoup
 
-
-def select_json_element(elements, element_to_find):
-    for element in elements:
-        if element['name'] == element_to_find:
-            return element['id']
-    return None
+from website.utils import utils
 
 
 def get_ratio(league, from_currency, to_currency):
-    # Local directory needed for some reason
-    import os
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    with open(f'{dir_path}/data/currencies.json') as json_file:
-        currencies = json.load(json_file)
-
-    url = f'http://currency.poe.trade/search?league={league}&online=x&stock=&want={select_json_element(currencies, from_currency)}&have={select_json_element(currencies, to_currency)}'
+    currencies = utils.get_currency_list()
+    url = f'http://currency.poe.trade/search?league={league}&online=x&stock=&want={utils.select_json_element(currencies, from_currency)}&have={utils.select_json_element(currencies, to_currency)}'
     soup = BeautifulSoup(requests.get(url).content, 'lxml')
     ratios = []
 
-    print(url)
-
     # Gets the ratios from the middle of the row
-    # TODO: Get stock information
-    for ele in soup.find_all('div', {'class': 'displayoffer-middle'}):
-        ratios.append([float(s) for s in re.findall(r'-?\d+\.?\d*', ele.text)])
-    ratios = sorted({Fraction(ratio[0]) / Fraction(ratio[1]) for ratio in ratios}, reverse=True)
+
+    for ele in soup.find_all('div', {'class': 'displayoffer'}):
+        offer = {'fraction': Fraction(ele['data-sellvalue']) / Fraction(ele['data-buyvalue']), 'stock': ele.get('data-stock', None), 'account_name': ele['data-username']}
+        print(offer)
+        ratios.append(offer)
+
+    # ratios = sorted({Fraction(ratio[0]) / Fraction(ratio[1]) for ratio in ratios}, reverse=True)
 
     return ratios

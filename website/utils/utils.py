@@ -75,3 +75,24 @@ def get_league_names():
 
 def get_trade_league_names():
     return [name for name in get_league_names() if 'SSF' not in name]
+
+
+def select_json_element(elements, element_to_find):
+    for element in elements:
+        if element['name'] == element_to_find:
+            return element['id']
+    return None
+
+
+def get_currency_list():
+    # Local directory needed for some reason
+    import os
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    with open(f'{dir_path}/data/currencies.json') as json_file:
+        return json.load(json_file)
+
+
+def get_character_names_of_account(account):
+    url = f'https://www.pathofexile.com/character-window/get-characters?accountName={account}'
+    response = requests.get(url)
+    return [character['name'] for character in response.json()]
