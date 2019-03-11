@@ -26,20 +26,6 @@ class Calculation:
 
         self.fractions = self.fractions[:-1]
 
-    def generate_fraction(self, numerator, min_denominator):
-        for denominator in range(min_denominator, min_denominator + 4):
-            fraction = Fraction(denominator, numerator)
-            self.combinations_checked += 1
-
-            # Check to see if the fraction is already in the list
-            if any(value == fraction for value in self.fractions):
-                break
-
-            self.fractions.append(fraction)
-            self.fractions.sort()
-            self.remove_overflow()
-            self.total_elements += 1
-
     def run(self):
         start_time = timeit.default_timer()
 
@@ -64,35 +50,19 @@ class Calculation:
         return {'fractions': data, 'iterations': self.combinations_checked, 'time': utils.humanize_seconds(elapsed), 'n_elements': self.n_elements}
 
     def generate_fraction_list(self):
-        if self.numerator / self.denominator <= 1:
-            for den in range(1, self.max_denominator + 1):
-                for num in range(1, self.max_numerator + 1):
-                    self.combinations_checked += 1
-                    if num * self.denominator >= self.numerator * den:
-                        break
+        for den in range(self.max_denominator, 0, -1):
+            for num in range(self.max_numerator, 0, -1):
+                self.combinations_checked += 1
+                if num * self.denominator <= self.numerator * den:
+                    break
 
-                    fraction = Fraction(num, den)
-                    if fraction.numerator != num or fraction.denominator != den:
-                        continue
+                fraction = Fraction(num, den)
+                if fraction.numerator != num or fraction.denominator != den:
+                    continue
 
-                    self.fractions.append(fraction)
-                    self.fractions.sort(reverse=True)
-                    self.remove_overflow()
-                    self.total_elements += 1
-        else:
-            for den in range(self.max_denominator + 1, 1, -1):
-                for num in range(self.max_numerator + 1, 1, -1):
-                    self.combinations_checked += 1
-                    if num * self.denominator <= self.numerator * den:
-                        break
-
-                    fraction = Fraction(num, den)
-                    if fraction.numerator != num or fraction.denominator != den:
-                        continue
-
-                    self.fractions.append(fraction)
-                    self.fractions.sort(reverse=False)
-                    self.remove_overflow()
-                    self.total_elements += 1
+                self.fractions.append(fraction)
+                self.fractions.sort(reverse=False)
+                self.remove_overflow()
+                self.total_elements += 1
         self.fractions.insert(0, self.fraction)
         self.total_elements += 1

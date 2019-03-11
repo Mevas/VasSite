@@ -34,14 +34,14 @@ def auto_undercutter(request):
 
             market_data = get_ratio(form_data['league'], form_data['currency_sell'], form_data['currency_buy'])
             undercutting_data = Calculation(market_data[0].numerator, market_data[0].denominator, 1, 4, form_data['max_denominator'], form_data['max_numerator']).run()
-            manager = Manager()
+            manager = Manager(form_data['league'])
             try:
+                print(f'Posted {undercutting_data["fractions"][1]["numerator"]} {form_data["currency_sell"]} for {undercutting_data["fractions"][1]["denominator"]} {form_data["currency_buy"]}')
                 manager.update_offer(form_data['currency_sell'], undercutting_data['fractions'][1]['numerator'], form_data['currency_buy'], undercutting_data['fractions'][1]['denominator'])
                 manager.save()
             except IndexError:
                 success = False
-            # TODO: Fix fractions < or > 1
-            print(success)
+
             return render(request, 'website/auto_undercutter.html', {'form': form, 'data': {'success': success}})
     else:
         form = AutoFractionForm(initial={'max_numerator': 100, 'max_denominator': 100})
