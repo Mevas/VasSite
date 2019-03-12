@@ -27,7 +27,6 @@ def undercutter(request):
 
 
 def auto_undercutter(request):
-    success = True
     account_name = request.COOKIES.get('account_name', '')
     api_key = request.COOKIES.get('api_key', '')
 
@@ -36,39 +35,74 @@ def auto_undercutter(request):
         if form.is_valid():
             form_data = form.clean()
 
-            market_data = get_ratio(form_data['league'], form_data['currency_sell'], form_data['currency_buy'])
-
             # Initialize cookies if they are not set
             account_name = form_data.get('account_name', account_name)
             api_key = form_data.get('api_key', api_key)
 
-            # Get the next offer if the best one is the user's one or it has less stock
-            offer = 0
-            while market_data[offer]['account_name'] == account_name or 0 <= market_data[offer]['stock'] < form_data['max_numerator']:
-                offer += 1
-
-            undercutting_data = Calculation(market_data[offer]['fraction'].numerator, market_data[offer]['fraction'].denominator, 1, 4, form_data['max_numerator'], form_data['max_denominator']).run()
-
             manager = Manager(api_key, form_data['league'])
-            currencies = utils.get_currency_list()
-            url = f'http://currency.poe.trade/search?league={form_data["league"]}&online=x&stock=&want={utils.select_json_element(currencies, form_data["currency_sell"])}&have={utils.select_json_element(currencies, form_data["currency_buy"])}'
-            try:
-                print(f'Posted {undercutting_data["fractions"][1]["numerator"]} {form_data["currency_sell"]} for {undercutting_data["fractions"][1]["denominator"]} {form_data["currency_buy"]}')
-                manager.update_offer(form_data['currency_sell'], undercutting_data['fractions'][1]['numerator'], form_data['currency_buy'], undercutting_data['fractions'][1]['denominator'])
-                manager.save()
-            except IndexError:
-                success = False
+
+            if 'update-one' in request.POST:
+                success, url = update_offer(manager, account_name, form_data)
+            else:
+                success = True
+                for league, offer_list in utils.get_account_offer_list(account_name).items():
+                    for offer in offer_list:
+                        if not offer['active']:
+                            continue
+
+                        data = {'league': league, 'currency_sell': offer['sell_id'], 'max_numerator': offer['sell_max'], 'currency_buy': offer['buy_id'], 'max_denominator': offer['buy_max']}
+                        success, url = update_offer(manager, account_name, data)
+                        if not success:
+                            print(f'Failed at {offer}')
+                        else:
+                            print(url, offer['buy_id'], offer['sell_id'])
+
+            manager.save()
 
             response = render(request, 'website/auto_undercutter.html', {'form': form, 'data': {'success': success, 'url': url}})
 
             # Set cookies for later uses
-            response.set_cookie('account_name', form_data.get('account_name', ''))
-            response.set_cookie('api_key', form_data.get('api_key', ''))
+            response.set_cookie('account_name', account_name)
+            response.set_cookie('api_key', api_key)
 
             return response
     else:
-        form = AutoFractionForm(initial={'account_name': account_name, 'max_numerator': 100, 'max_denominator': 100})
+        form = AutoFractionForm(initial={'max_numerator': 100, 'max_denominator': 100, 'account_name': account_name, 'api_key': api_key})
     return render(request, 'website/auto_undercutter.html', {'form': form})
+
+
+def update_offer(manager, account_name, data):
+    if isinstance(data['currency_sell'], int):
+        data['currency_sell'] = utils.get_currency_name_by_id(data['currency_sell'])
+    if isinstance(data['currency_buy'], int):
+        data['currency_buy'] = utils.get_currency_name_by_id(data['currency_buy'])
+
+    print(f"Updating offer of account {account_name}: {data['currency_sell']} -> {data['currency_buy']} in {data['league']} league")
+
+    success = True
+    currencies = utils.get_currency_list()
+
+    market_data = get_ratio(data['league'], data['currency_sell'], data['currency_buy'])
+
+    # Get the next offer if the best one is the user's one or it has less stock
+    offer = 0
+    while offer < len(market_data) - 1 and (market_data[offer]['account_name'] == account_name or 0 <= market_data[offer]['stock'] < data['max_numerator'] or market_data[offer]['fraction'] / market_data[offer+1]['fraction'] >= 1.2):
+        offer += 1
+
+    undercutting_data = Calculation(market_data[offer]['fraction'].numerator, market_data[offer]['fraction'].denominator, 1, 4, data['max_numerator'], data['max_denominator']).run()
+
+    url = f'http://currency.poe.trade/search?league={data["league"]}&online=x&stock=&want={utils.select_json_element(currencies, data["currency_sell"])}&have={utils.select_json_element(currencies, data["currency_buy"])}'
+    try:
+        manager.change_offer(data['currency_sell'], undercutting_data['fractions'][1]['numerator'], data['currency_buy'], undercutting_data['fractions'][1]['denominator'])
+    except IndexError:
+        success = False
+
+    if success:
+        print(f'Posted {undercutting_data["fractions"][1]["numerator"]} {data["currency_sell"]} -> {undercutting_data["fractions"][1]["denominator"]} {data["currency_buy"]}')
+    else:
+        print('Error - updating failed')
+
+    return success, url
 
 
 def program_scraper(request):

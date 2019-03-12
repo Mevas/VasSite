@@ -84,12 +84,26 @@ def select_json_element(elements, element_to_find):
     return None
 
 
+def get_currency_name_by_id(id):
+    for currency in get_currency_list():
+        if currency['id'] == id:
+            return currency['name']
+
+
 def get_currency_list():
     # Local directory needed for some reason
     import os
     dir_path = os.path.dirname(os.path.realpath(__file__))
     with open(f'{dir_path}/data/currencies.json') as json_file:
         return json.load(json_file)
+
+
+def get_account_offer_list(account_name):
+    # Local directory needed for some reason
+    import os
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    with open(f'{dir_path}/data/{account_name}.json') as json_file:
+        return json.load(json_file)['offers']
 
 
 def get_character_names_of_account(account):

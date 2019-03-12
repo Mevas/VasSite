@@ -55,6 +55,11 @@
     "css": "orb-of-scouring"
   },
   {
+    "id": 12,
+    "name": "Blessed Orb",
+    "css": "blessed-orb"
+  },
+  {
     "id": 13,
     "name": "Orb of Regret",
     "css": "orb-of-regret"

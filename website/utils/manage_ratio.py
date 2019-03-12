@@ -113,7 +113,7 @@ class Manager:
         offer.set_sell(currency_sell, amount_sell)
         offer.set_buy(currency_buy, amount_buy)
 
-    def update_offer(self, currency_sell, amount_sell, currency_buy, amount_buy):
+    def change_offer(self, currency_sell, amount_sell, currency_buy, amount_buy):
         # Check if there is an offer already
         offer = self.find_offer(sell_currency=currency_sell, buy_currency=currency_buy)
         offer = offer[0] if offer else None
