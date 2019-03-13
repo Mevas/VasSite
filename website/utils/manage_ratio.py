@@ -1,5 +1,7 @@
+import urllib
+
+import requests
 import selenium
-from selenium import webdriver
 
 from website.utils import utils
 
@@ -60,71 +62,44 @@ class Offer:
 class Manager:
     def __init__(self, api_key, league=''):
         # Chrome options for optimal performance in docker
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--window-size=1420,2060')
-        chrome_options.add_argument('--disable-gpu')
-        self.driver = webdriver.Chrome(options=chrome_options)
-        self.driver.implicitly_wait(10)
-
-        self.driver.get('http://currency.poe.trade')
-        self.driver.add_cookie({'name': 'apikey', 'value': api_key})
+        # chrome_options = webdriver.ChromeOptions()
+        # chrome_options.add_argument('--no-sandbox')
+        # # chrome_options.add_argument('--headless')
+        # chrome_options.add_argument('--window-size=1420,2060')
+        # chrome_options.add_argument('--disable-gpu')
+        # self.driver = webdriver.Chrome(options=chrome_options)
+        # self.driver.implicitly_wait(10)
+        #
+        # self.driver.get('http://currency.poe.trade')
+        # self.driver.add_cookie({'name': 'apikey', 'value': api_key})
 
         # Set the default league to the softcore temporary league if one is not specifed
         self.leagues = utils.get_trade_league_names()
         self.league = league if league else self.leagues[2] if len(self.leagues) > 2 else 'Standard'
+        self.api_key = api_key
 
         self.offer_count = 0
         self.offers = []
 
-        self.go_to_league(self.league)
+        self.offer_string = f'league={self.league}&apikey={self.api_key}'
 
-    def go_to_league(self, league):
-        self.driver.get(f'http://currency.poe.trade/shop?league={league}')
-
-        self.offer_count = self.count_offers()
-        self.build_offer_list()
-
-        # Increment the offer_count if there is already an offer (stuff breaks without it)
-        if self.offer_count > 1 or self.offers and 'Select' not in self.offers[0].sell_currency:
-            self.offer_count += 1
-
-    def new_offer(self):
-        # If there is 1 offer already, then click on the "new offer" button
-        if self.offer_count > 1:
-            self.driver.find_element_by_xpath('//*[@id="content"]/form/div/div/div[6]/div[3]/div[2]/div/a').click()
-
-        # Create the offer and append it to the manager master list
-        offer = Offer(self.driver, self.offer_count)
-        self.offers.append(offer)
-        self.offer_count += 1
-        return offer
+        # self.go_to_league(self.league)
 
     def save(self):
-        self.driver.find_element_by_xpath('//*[@id="content"]/form/div/div/div[7]/div/div[2]/input').click()
+        url = f'http://currency.poe.trade/shop?league={self.league}'
+        self.offer_string = urllib.parse.quote_plus(self.offer_string, safe='/&=')
+
+        requests.post(url, data=self.offer_string, headers={'Content-Type': 'application/x-www-form-urlencoded'})
 
     def count_offers(self):
         # Count how many elements have the .row.offer classes, and subtract 1, because there is a hidden template that gets counted
         return len(self.driver.find_elements_by_css_selector('.row.offer')) - 1
 
-    def create_new_offer(self, currency_sell, amount_sell, currency_buy, amount_buy):
-        offer = self.new_offer()
-        offer.set_sell(currency_sell, amount_sell)
-        offer.set_buy(currency_buy, amount_buy)
-
     def change_offer(self, currency_sell, amount_sell, currency_buy, amount_buy):
-        # Check if there is an offer already
-        offer = self.find_offer(sell_currency=currency_sell, buy_currency=currency_buy)
-        offer = offer[0] if offer else None
+        url = f'http://currency.poe.trade/shop?league={self.league}'
+        self.offer_string += f'&sell_currency={currency_sell}&sell_value={amount_sell}&buy_value={amount_buy}&buy_currency={currency_buy}'
 
-        # If not, create a new one and return
-        if not offer:
-            self.create_new_offer(currency_sell, amount_sell, currency_buy, amount_buy)
-            return
-
-        offer.set_sell(amount=amount_sell)
-        offer.set_buy(amount=amount_buy)
+        requests.post(url, data={'league': self.league, 'apikey': self.api_key, 'sell_currency': currency_sell, 'sell_value': amount_sell, 'buy_currency': currency_buy, 'buy_value': amount_buy})
 
     def build_offer_list(self):
         for index, offer in enumerate(self.driver.find_elements_by_css_selector('.row.offer')[1:]):

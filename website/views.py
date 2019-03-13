@@ -29,6 +29,7 @@ def undercutter(request):
 def auto_undercutter(request):
     account_name = request.COOKIES.get('account_name', '')
     api_key = request.COOKIES.get('api_key', '')
+    offers = [{**offer, 'league': 'Synthesis'} for offer in utils.get_account_offer_list(account_name)['Synthesis']]
 
     if request.method == 'POST':
         form = AutoFractionForm(request.POST)
@@ -38,24 +39,57 @@ def auto_undercutter(request):
             # Initialize cookies if they are not set
             account_name = form_data.get('account_name', account_name)
             api_key = form_data.get('api_key', api_key)
+            form_league = form_data.get('league', 'Standard')
 
             manager = Manager(api_key, form_data['league'])
 
             if 'update-one' in request.POST:
                 success, url = update_offer(manager, account_name, form_data)
             else:
-                success = True
-                for league, offer_list in utils.get_account_offer_list(account_name).items():
-                    for offer in offer_list:
-                        if not offer['active']:
+                for sell in range(1, 16 + 1):
+                    for buy in range(1, 16 + 1):
+                        if sell in [3, 6] or buy in [6] or sell == buy or sell in [] or buy == 3 and sell == 8 or sell == 3 and buy == 8:
+                            continue
+                        # [2, 3, 6, 7, 11, 14]
+                        sell_max = 20 if sell in [2, 3, 10] else 100
+                        if sell in [5, 11, 13, 14, 16]:
+                            sell_max = 10
+                        if sell in [6, 15]:
+                            sell_max = 1
+                        buy_max = 20 if buy in [2, 3, 10] else 100
+                        if buy in [4, 5, 11, 13, 14, 16]:
+                            buy_max = 10
+                        if buy in [6, 15]:
+                            buy_max = 1
+                        if buy in [3]:
+                            sell_max = 2000
+                        if sell == 4:
+                            sell_max = 5
+                        if sell == 4 and buy not in []:
+                            continue
+                        if buy == 4 and sell not in []:
+                            continue
+                        if buy == 3 and sell not in [8]:
                             continue
 
-                        data = {'league': league, 'currency_sell': offer['sell_id'], 'max_numerator': offer['sell_max'], 'currency_buy': offer['buy_id'], 'max_denominator': offer['buy_max']}
+                        data = {'league': form_league, 'currency_sell': sell, 'max_numerator': sell_max, 'currency_buy': buy, 'max_denominator': buy_max}
                         success, url = update_offer(manager, account_name, data)
                         if not success:
-                            print(f'Failed at {offer}')
+                            print(f'Failed at {sell} -> {buy}')
                         else:
-                            print(url, offer['buy_id'], offer['sell_id'])
+                            print(url, sell, buy)
+                # success = True
+                # for league, offer_list in utils.get_account_offer_list(account_name).items():
+                #     for offer in offer_list:
+                #         if not offer['active']:
+                #             continue
+                #
+                #         data = {'league': league, 'currency_sell': offer['sell_id'], 'max_numerator': offer['sell_max'], 'currency_buy': offer['buy_id'], 'max_denominator': offer['buy_max']}
+                #         success, url = update_offer(manager, account_name, data)
+                #         if not success:
+                #             print(f'Failed at {offer}')
+                #         else:
+                #             print(url, offer['buy_id'], offer['sell_id'])
 
             manager.save()
 
@@ -68,7 +102,7 @@ def auto_undercutter(request):
             return response
     else:
         form = AutoFractionForm(initial={'max_numerator': 100, 'max_denominator': 100, 'account_name': account_name, 'api_key': api_key})
-    return render(request, 'website/auto_undercutter.html', {'form': form})
+    return render(request, 'website/auto_undercutter.html', {'form': form, 'data': {'offers': offers}})
 
 
 def update_offer(manager, account_name, data):
@@ -84,9 +118,12 @@ def update_offer(manager, account_name, data):
 
     market_data = get_ratio(data['league'], data['currency_sell'], data['currency_buy'])
 
+    if len(market_data) == 0:
+        return False, ''
+
     # Get the next offer if the best one is the user's one or it has less stock
     offer = 0
-    while offer < len(market_data) - 1 and (market_data[offer]['account_name'] == account_name or 0 <= market_data[offer]['stock'] < data['max_numerator'] or market_data[offer]['fraction'] / market_data[offer+1]['fraction'] >= 1.2):
+    while offer < len(market_data) - 1 and ((market_data[offer]['account_name'] == account_name or 0 <= market_data[offer]['stock'] < data['max_numerator'] or market_data[offer]['fraction'] / market_data[offer+1]['fraction'] >= 1.2 or 0 <= market_data[offer]['stock'] <= market_data[offer]['fraction'].numerator) and not market_data[offer]['stock'] > market_data[offer]['fraction'].numerator):
         offer += 1
 
     undercutting_data = Calculation(market_data[offer]['fraction'].numerator, market_data[offer]['fraction'].denominator, 1, 4, data['max_numerator'], data['max_denominator']).run()

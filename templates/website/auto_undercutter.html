@@ -2,7 +2,8 @@
 
 {% block content %}
     {% include "website/includes/auto_undercutter/auto-fraction-card.html" %}
-    {% if data %}
+    {% if data.success %}
         {% include "website/includes/success-card.html" %}
     {% endif %}
+    {% include "website/includes/auto_undercutter/offer-table-card.html" %}
 {% endblock %}

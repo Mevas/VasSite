@@ -1,102 +1,78 @@
 [
   {
     "id": 1,
-    "name": "Orb of Alteration",
-    "css": "orb-of-alteration"
+    "name": "Orb of Alteration"
   },
   {
     "id": 2,
-    "name": "Orb of Fusing",
-    "css": "orb-of-fusing"
+    "name": "Orb of Fusing"
   },
   {
     "id": 3,
-    "name": "Orb of Alchemy",
-    "css": "orb-of-alchemy"
+    "name": "Orb of Alchemy"
   },
   {
     "id": 4,
-    "name": "Chaos Orb",
-    "css": "chaos-orb"
+    "name": "Chaos Orb"
   },
   {
     "id": 5,
-    "name": "Gemcutter's Prism",
-    "css": "gemcutters-prism"
+    "name": "Gemcutter's Prism"
   },
   {
     "id": 6,
-    "name": "Exalted Orb",
-    "css": "exalted-orb"
+    "name": "Exalted Orb"
   },
   {
     "id": 7,
-    "name": "Chromatic Orb",
-    "css": "chromatic-orb"
+    "name": "Chromatic Orb"
   },
   {
     "id": 8,
-    "name": "Jeweller's Orb",
-    "css": "jewellers-orb"
+    "name": "Jeweller's Orb"
   },
   {
     "id": 9,
-    "name": "Orb of Chance",
-    "css": "orb-of-chance"
+    "name": "Orb of Chance"
   },
   {
     "id": 10,
-    "name": "Cartographer's Chisel",
-    "css": "cartographers-chisel"
+    "name": "Cartographer's Chisel"
   },
   {
     "id": 11,
-    "name": "Orb of Scouring",
-    "css": "orb-of-scouring"
+    "name": "Orb of Scouring"
   },
   {
     "id": 12,
-    "name": "Blessed Orb",
-    "css": "blessed-orb"
+    "name": "Blessed Orb"
   },
   {
     "id": 13,
-    "name": "Orb of Regret",
-    "css": "orb-of-regret"
+    "name": "Orb of Regret"
   },
   {
     "id": 14,
-    "name": "Regal Orb",
-    "css": "regal-orb"
+    "name": "Regal Orb"
   },
   {
     "id": 15,
-    "name": "Divine Orb",
-    "css": "divine-orb"
+    "name": "Divine Orb"
   },
   {
     "id": 16,
-    "name": "Vaal Orb",
-    "css": "vaal-orb"
+    "name": "Vaal Orb"
   },
   {
     "id": 35,
-    "name": "Silver Coin",
-    "css": "silver-coin"
+    "name": "Silver Coin"
   },
   {
     "id": 513,
-    "name": "Orb of Annulment",
-    "css": "orb-of-annulment"
-  },
-  {
-    "id": 514,
-    "name": "Orb of Binding",
-    "css": "orb-of-binding"
+    "name": "Orb of Annulment"
   },
   {
     "id": 515,
-    "name": "Orb of Horizons",
-    "css": "orb-of-horizons"
+    "name": "Orb of Horizons"
   }
 ]

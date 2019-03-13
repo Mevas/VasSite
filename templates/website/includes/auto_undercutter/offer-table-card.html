@@ -1,0 +1,63 @@
+{% extends "website/includes/card.html" %}
+
+{% load humanize %}
+
+{% block title %}
+    Current offers
+{% endblock %}
+
+{% block content %}
+    <table class="result-table centered highlight striped">
+        <thead>
+        <tr>
+            <th>League</th>
+            <th>Sell min</th>
+            <th>Sell max</th>
+            <th>Sell</th>
+            <th>Buy</th>
+            <th>Buy max</th>
+            <th>Buy min</th>
+            <th>Active</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for offer in data.offers %}
+            <tr id="offer{{ forloop.counter0 }}" class="offer">
+                <td class="league-input">
+                    <div class="rel">
+                        {{ offer.league }}
+                    </div>
+                </td>
+                <td class="sell-min-input">
+                    {{ offer.sell_min }}
+                </td>
+                <td class="sell-max-input">
+                    {{ offer.sell_max }}
+                </td>
+                <td class="sell-currency-input">
+                    {{ offer.sell_id }}
+                </td>
+                <td class="buy-currency-input">
+                    {{ offer.buy_id }}
+                </td>
+                <td class=buy-max-input">
+                    {{ offer.buy_max }}
+                </td>
+                <td class="buy-min-input">
+                    {{ offer.buy_min }}
+                </td>
+                <td class="active-input">
+                    {{ offer.active }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block collapsible-id %}table-card-collapsible{% endblock %}
+
+{% block collapsible %}
+{% endblock %}
+
