@@ -285,3 +285,5 @@ pip-selfcheck.json
 .sonarlint/
 
 # End of https://www.gitignore.io/api/python,django,pycharm,sonarqube
+
+migrations/
